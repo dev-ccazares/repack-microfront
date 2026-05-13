@@ -1,0 +1,12 @@
+import { View } from 'react-native';
+export const ColorMatrix = View;
+export const concatColorMatrices = () => [];
+export const normal = () => [];
+export const grayscale = () => [];
+export const saturate = () => [];
+export const brightness = () => [];
+export const contrast = () => [];
+export const invert = () => [];
+export const hueRotate = () => [];
+export const sepia = () => [];
+export default View;

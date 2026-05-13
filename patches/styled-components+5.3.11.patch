@@ -1,0 +1,29 @@
+diff --git a/node_modules/styled-components/native/dist/styled-components.native.cjs.js b/node_modules/styled-components/native/dist/styled-components.native.cjs.js
+index b8229f9..57af354 100644
+--- a/node_modules/styled-components/native/dist/styled-components.native.cjs.js
++++ b/node_modules/styled-components/native/dist/styled-components.native.cjs.js
+@@ -425,6 +425,9 @@ var rehydrateSheetFromTag = function rehydrateSheetFromTag(sheet, style) {
+ };
+ 
+ var rehydrateSheet = function rehydrateSheet(sheet) {
++  if (typeof document === 'undefined') {
++    return;
++  }
+   var nodes = document.querySelectorAll(SELECTOR);
+ 
+   for (var i = 0, l = nodes.length; i < l; i++) {
+diff --git a/node_modules/styled-components/native/dist/styled-components.native.esm.js b/node_modules/styled-components/native/dist/styled-components.native.esm.js
+index d9c326a..07e1287 100644
+--- a/node_modules/styled-components/native/dist/styled-components.native.esm.js
++++ b/node_modules/styled-components/native/dist/styled-components.native.esm.js
+@@ -418,6 +418,10 @@ var rehydrateSheetFromTag = function rehydrateSheetFromTag(sheet, style) {
+ };
+ 
+ var rehydrateSheet = function rehydrateSheet(sheet) {
++
++  if (typeof document === 'undefined') {
++    return;
++  }
+   var nodes = document.querySelectorAll(SELECTOR);
+ 
+   for (var i = 0, l = nodes.length; i < l; i++) {

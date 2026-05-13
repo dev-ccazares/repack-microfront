@@ -1,0 +1,10 @@
+declare module '@deuna/tl-core-components-rn/src/molecules/item';
+declare module '@deuna/tl-core-components-rn/src/molecules/keyboard';
+declare module '@deuna/tl-core-components-rn/src/atoms/typography';
+declare module '@deuna/tl-core-components-rn/src/atoms/avatar';
+declare module '@deuna/tl-core-components-rn/src/atoms/icons';
+declare module '@deuna/tl-core-components-rn/src/theming/themeProvider';
+declare module '@deuna/tl-core-components-rn/src/molecules/button';
+declare module '@deuna/tl-core-components-rn/src/styles/colors';
+declare module '@deuna/tl-core-components-rn/src/molecules/forms/formInput';
+declare module '@deuna/tl-core-components-v2-rn/templates/Ticket/TicketStrategy';

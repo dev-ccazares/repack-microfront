@@ -1,0 +1,278 @@
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/atoms/Spinner/Spinner.js b/node_modules/@deuna/tl-core-components-v2-rn/atoms/Spinner/Spinner.js
+index dcb42bf..ff39833 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/atoms/Spinner/Spinner.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/atoms/Spinner/Spinner.js
+@@ -2,16 +2,13 @@ import { ActivityIndicator, StyleSheet } from 'react-native';
+ import React, { useMemo } from 'react';
+ import dimensions from '../../theme/tokens/dimensions';
+ import { useAppTheme } from '../../theme/themes';
+-const Spinner = ({ color }) => {
++const Spinner = ({ color = 'Brand' }) => {
+     const theme = useAppTheme();
+     const spinnerColor = useMemo(() => {
+         return theme.spinner.color[color];
+     }, [theme, color]);
+     return (React.createElement(ActivityIndicator, { testID: "spinner", style: styles.container, color: spinnerColor }));
+ };
+-Spinner.defaultProps = {
+-    color: 'Brand',
+-};
+ export default Spinner;
+ const styles = StyleSheet.create({
+     container: {
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Badge/Badge.js b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Badge/Badge.js
+index 18384d0..e2f42c8 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Badge/Badge.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Badge/Badge.js
+@@ -18,7 +18,7 @@ import { Icon, Text } from '../../atoms';
+ import { horizontalScale, moderateScale } from '../../styles/responsive';
+ import { spacing } from '../../theme/spacing';
+ function Badge(_a) {
+-    var { semantic, type, bright, text, showIcon } = _a, props = __rest(_a, ["semantic", "type", "bright", "text", "showIcon"]);
++    var { semantic = 'pill', type = 'primary', bright = 'bold', text = 'default', showIcon = false } = _a, props = __rest(_a, ["semantic", "type", "bright", "text", "showIcon"]);
+     const theme = useAppTheme();
+     const badgeStyle = useMemo(() => {
+         // eslint-disable-next-line @typescript-eslint/no-unused-vars
+@@ -44,12 +44,5 @@ function Badge(_a) {
+         React.createElement(Icon, { name: "plus", size: moderateScale(spacing['s-4']), color: theme.colors.white, hide: !showIcon, style: { marginRight: horizontalScale(spacing['s-1']) } }),
+         React.createElement(Text, { variant: textVariant, style: textStyle, numberOfLines: 1, ellipsizeMode: "tail" }, text)));
+ }
+-Badge.defaultProps = {
+-    semantic: 'pill',
+-    type: 'primary',
+-    bright: 'bold',
+-    text: 'default',
+-    showIcon: false,
+-};
+ export default React.memo(Badge);
+ //# sourceMappingURL=Badge.js.map
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.d.ts b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.d.ts
+index b684b4e..d43e3f4 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.d.ts
++++ b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.d.ts
+@@ -3,7 +3,7 @@ import { ViewStyle } from 'react-native';
+ import { ButtonSematic, ButtonSize, ButtonType } from '../../theme/light/DeUnaLightButton';
+ type ButtonProps = {
+     children?: React.ReactNode;
+-    size: ButtonSize;
++    size?: ButtonSize;
+     loading?: boolean;
+     type: ButtonType;
+     semantic: ButtonSematic;
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.js b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.js
+index 947c2dc..ed26d8c 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Button/Button.js
+@@ -36,7 +36,7 @@ const ButtonIcon = ({ icon, loading, secondaryColor, size, }) => {
+     return null;
+ };
+ const Button = (_a) => {
+-    var { children, loading, type, semantic, disabled, icon, size, style, onPress } = _a, props = __rest(_a, ["children", "loading", "type", "semantic", "disabled", "icon", "size", "style", "onPress"]);
++    var { children, loading = false, type = 'filled', semantic = 'destructive', disabled = false, icon, size = 's', style, onPress = () => { } } = _a, props = __rest(_a, ["children", "loading", "type", "semantic", "disabled", "icon", "size", "style", "onPress"]);
+     const theme = useAppTheme();
+     const buttonStyle = useMemo(() => {
+         const state = disabled ? 'disabled' : loading ? 'loading' : 'enabled';
+@@ -59,13 +59,5 @@ const Button = (_a) => {
+                 color: secondaryColor,
+             }, variant: textVariant }, children))));
+ };
+-Button.defaultProps = {
+-    loading: false,
+-    type: 'filled',
+-    semantic: 'destructive',
+-    disabled: false,
+-    size: 's',
+-    onPress: () => { },
+-};
+ export default Button;
+ //# sourceMappingURL=Button.js.map
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Form/Form.LeadingContent.js b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Form/Form.LeadingContent.js
+index 96dd1e2..7f46eee 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/molecules/Form/Form.LeadingContent.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/molecules/Form/Form.LeadingContent.js
+@@ -37,7 +37,7 @@ export function Content(props) {
+         return (React.createElement(Avatar, { shape: "rectangular", size: "sm", variant: "brand" }, props.svgComponent));
+     }
+     if (type === LeadingContentValues.loading) {
+-        return React.createElement(Spinner, { color: props.color });
++        return React.createElement(Spinner, { color: props.color || 'Brand' });
+     }
+     if (type === LeadingContentValues.counter) {
+         return (React.createElement(Text, Object.assign({ variant: "text-sm-regular", style: { color: content.default['content-secondary'] }, ellipsizeMode: "tail", numberOfLines: 1 }, rest), `${props.text.length}/${props.maxLength}`));
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/organism/ListItem/ListItem.js b/node_modules/@deuna/tl-core-components-v2-rn/organism/ListItem/ListItem.js
+index 0ade976..54021b8 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/organism/ListItem/ListItem.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/organism/ListItem/ListItem.js
+@@ -22,18 +22,13 @@ import { Badge } from '../../molecules';
+ import { useAppTheme } from '../../theme/themes';
+ import TrailingContent from './TrailingContent';
+ const ListItem = (_a) => {
+-    var { content, state, type, children, style = {} } = _a, props = __rest(_a, ["content", "state", "type", "children", "style"]);
++    var { content = '3-line', state = 'default', type = 'default', children, style = {} } = _a, props = __rest(_a, ["content", "state", "type", "children", "style"]);
+     const theme = useAppTheme();
+     const itemStyle = useMemo(() => {
+         return Object.assign(Object.assign(Object.assign({}, styles.listItem), theme.listItem[type][state]), style);
+     }, [state, type, style]);
+     return (React.createElement(View, Object.assign({ testID: props === null || props === void 0 ? void 0 : props.testID, style: itemStyle }, props), children));
+ };
+-ListItem.defaultProps = {
+-    content: '3-line',
+-    state: 'default',
+-    type: 'default',
+-};
+ ListItem.Avatar = function ListItemAvatar(_a) {
+     var { iconName, color, subState } = _a, props = __rest(_a, ["iconName", "color", "subState"]);
+     return (React.createElement(View, { style: styles.avatar },
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/organism/ProductCard/Main/Main.js b/node_modules/@deuna/tl-core-components-v2-rn/organism/ProductCard/Main/Main.js
+index 3778b97..ad5cda0 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/organism/ProductCard/Main/Main.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/organism/ProductCard/Main/Main.js
+@@ -23,7 +23,7 @@ const LogoTypes = {
+     deuna: DeUnaLogo,
+ };
+ const Main = (_a) => {
+-    var { amount, onEyeIconPress, accountType, accountAlias, accountNumber, visibleAmount, logoType = 'bp', label, buttonText, buttonIcon, buttonOnPress, buttonTestId, onSharePress } = _a, props = __rest(_a, ["amount", "onEyeIconPress", "accountType", "accountAlias", "accountNumber", "visibleAmount", "logoType", "label", "buttonText", "buttonIcon", "buttonOnPress", "buttonTestId", "onSharePress"]);
++    var { amount, onEyeIconPress = () => { }, accountType = '', accountAlias = '', accountNumber = '', visibleAmount = false, logoType = 'bp', label = 'Saldo disponible', buttonText, buttonIcon = undefined, buttonOnPress = () => { }, buttonTestId = '', onSharePress } = _a, props = __rest(_a, ["amount", "onEyeIconPress", "accountType", "accountAlias", "accountNumber", "visibleAmount", "logoType", "label", "buttonText", "buttonIcon", "buttonOnPress", "buttonTestId", "onSharePress"]);
+     const SelectedLogo = LogoTypes[logoType] || BPLogo;
+     return (React.createElement(View, Object.assign({ style: styles.main }, props),
+         React.createElement(View, { testID: "productCardTestId", style: styles.container },
+@@ -48,18 +48,5 @@ const Main = (_a) => {
+                             React.createElement(Icon, { testID: "eyeIconTestId", name: visibleAmount ? 'eye-off' : 'eye', size: 24, color: colors.black })))),
+                 buttonText && (React.createElement(Button, { onPress: buttonOnPress, icon: buttonIcon, type: "tonal", size: "s", style: styles.button, semantic: "default", testID: buttonTestId }, buttonText))))));
+ };
+-Main.defaultProps = {
+-    visibleAmount: false,
+-    logoType: 'bp',
+-    label: 'Saldo disponible',
+-    accountAlias: '',
+-    accountNumber: '',
+-    accountType: '',
+-    buttonText: '',
+-    buttonIcon: undefined,
+-    buttonOnPress: () => { },
+-    onEyeIconPress: () => { },
+-    buttonTestId: '',
+-};
+ export default React.memo(Main);
+ //# sourceMappingURL=Main.js.map
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/organism/Shortcuts/Shortcuts.js b/node_modules/@deuna/tl-core-components-v2-rn/organism/Shortcuts/Shortcuts.js
+index 32065fb..c0f0e1d 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/organism/Shortcuts/Shortcuts.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/organism/Shortcuts/Shortcuts.js
+@@ -27,7 +27,7 @@ export const Shortcuts = ({ onShortcutPress, onShowMorePress, shortcuts, showAll
+         return (_a = Object.entries(Breakpoints).find(([, breakpoint]) => width <= breakpoint)) !== null && _a !== void 0 ? _a : ['lg', Breakpoints.lg];
+     }, [width]);
+     const itemQty = useMemo(() => ItemsByBreakpoint[breakpoint], [breakpoint]);
+-    const shortcutBestWidth = useMemo(() => (width - spacing['s-4'] * 2) / itemQty, [itemQty, width]);
++    const shortcutBestWidth = useMemo(() => Math.floor((width - spacing['s-4'] * 2) / itemQty), [itemQty, width]);
+     const maxShortcutsQty = useMemo(() => MaxShortcuts[breakpoint], [breakpoint]);
+     const needsToWrapShortcuts = useMemo(() => shortcuts.length > maxShortcutsQty, [shortcuts]);
+     if (showAll) {
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/Ticket.interfaces.d.ts b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/Ticket.interfaces.d.ts
+index 52458df..c00cc92 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/Ticket.interfaces.d.ts
++++ b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/Ticket.interfaces.d.ts
+@@ -9,6 +9,7 @@ export interface TicketProps extends TicketBaseProps {
+     goBack: () => void;
+     goToHome?: () => void;
+     benefit?: any;
++    extraInfo?: (() => ReactNode) | ReactNode;
+     icons?: {
+         close?: {
+             color?: colorsType;
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBody.styles.js b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBody.styles.js
+index 71dde43..f9198b1 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBody.styles.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBody.styles.js
+@@ -99,6 +99,12 @@ export const styles = StyleSheet.create({
+         lineHeight: responsiveFont(16),
+         paddingVertical: verticalScale(8),
+     },
++    extraInfo: {
++        width: '100%',
++        marginTop: verticalScale(8),
++        alignItems: 'center',
++        justifyContent: 'center',
++    },
+     titlePayAmount: {
+         color: colors.primary500,
+         paddingVertical: verticalScale(10),
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/TicketBodyTop.js b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/TicketBodyTop.js
+index c247fb1..b40ffed 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/TicketBodyTop.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/TicketBodyTop.js
+@@ -10,7 +10,7 @@ import { ticket_strings } from '../TicketBody.strings';
+ import { useTicketBodyTop } from './hooks/useTicketBodyTop';
+ const deUnaLogo = require('./../../../../assets/imgs/voucher-deuna.png');
+ export const TicketBodyTop = () => {
+-    const { type, title, caption, amount, benefit, handleBenefitOnClick, showDetail, detailsTicketData, handleShowDetail, getShowDetail, } = useTicketBodyTop();
++    const { type, title, caption, concept, amount, benefit, extraInfo, handleBenefitOnClick, showDetail, detailsTicketData, handleShowDetail, getShowDetail, } = useTicketBodyTop();
+     return (React.createElement(View, { style: [styles.container] },
+         React.createElement(View, { style: styles.header },
+             type === ticket_strings.share ? (React.createElement(Image, { source: deUnaLogo, style: styles.logoVoucher })) : (React.createElement(View, { style: styles.circleCheck },
+@@ -19,6 +19,7 @@ export const TicketBodyTop = () => {
+             caption ? (React.createElement(Text, { testID: "caption", variant: "text-sm-regular", style: type === ticket_strings.share
+                     ? styles.subShareTitle
+                     : styles.subTitle }, caption)) : null,
++            concept ? (React.createElement(Text, { testID: "concept", variant: "text-sm-regular", style: styles.titlePay }, concept)) : null,
+             React.createElement(Text, { testID: "amount", variant: "number-lg-bold", style: styles.titlePayAmount },
+                 "$",
+                 amount),
+@@ -27,6 +28,8 @@ export const TicketBodyTop = () => {
+             showDetail && (React.createElement(View, { style: type === ticket_strings.share
+                     ? styles.detailSharedItems
+                     : styles.detailItems }, detailsTicketData.map((detail, index) => (React.createElement(TicketBodyDetailItem, { key: index, label: detail.label, value: detail.value, testId: `detail-${index}` }))))),
++            extraInfo
++                ? (React.createElement(View, { style: styles.extraInfo }, typeof extraInfo === 'function' ? extraInfo() : extraInfo)) : null,
+             type !== ticket_strings.share && (React.createElement(Button, { testID: "showDetail", type: 'filled', onPress: handleShowDetail, semantic: "default" }, getShowDetail())))));
+ };
+ //# sourceMappingURL=TicketBodyTop.js.map
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/hooks/useTicketBodyTop.js b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/hooks/useTicketBodyTop.js
+index 7828646..d553bda 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/hooks/useTicketBodyTop.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketBody/TicketBodyTop/hooks/useTicketBodyTop.js
+@@ -4,7 +4,7 @@ import { ticket_strings } from '../../TicketBody.strings';
+ import { useTicket } from '../../../TicketProvider/TicketProvider';
+ export const useTicketBodyTop = () => {
+     const [showDetail, setShowDetail] = useState(false);
+-    const { voucherStrategy, isFirebaseReason, payDay, benefit } = useTicket();
++    const { voucherStrategy, isFirebaseReason, payDay, benefit, extraInfo } = useTicket();
+     const voucherData = voucherStrategy.getVoucherData();
+     const amount = voucherData === null || voucherData === void 0 ? void 0 : voucherData.amount;
+     const type = (voucherData === null || voucherData === void 0 ? void 0 : voucherData.type) || ticket_strings.fold;
+@@ -68,6 +68,7 @@ export const useTicketBodyTop = () => {
+         concept,
+         amount: removeSign(amount),
+         benefit,
++        extraInfo,
+         handleBenefitOnClick,
+         showDetail,
+         detailsTicketData,
+diff --git a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketProvider/TicketProvider.js b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketProvider/TicketProvider.js
+index bc62aa5..784f23a 100644
+--- a/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketProvider/TicketProvider.js
++++ b/node_modules/@deuna/tl-core-components-v2-rn/templates/Ticket/TicketProvider/TicketProvider.js
+@@ -1,6 +1,6 @@
+ import React, { createContext, useContext, useMemo, useState } from 'react';
+ const TicketContext = createContext(undefined);
+-export const TicketProvider = ({ children, voucherStrategy, payDay, benefit, goBack, goToHome, icons, isFirebaseReason, hasGoToHome, repeatTransactionButton, }) => {
++export const TicketProvider = ({ children, voucherStrategy, payDay, benefit, goBack, goToHome, icons, isFirebaseReason, hasGoToHome, repeatTransactionButton, extraInfo, }) => {
+     const [loading, setLoading] = useState(false);
+     const value = useMemo(() => ({
+         voucherStrategy,
+@@ -14,6 +14,7 @@ export const TicketProvider = ({ children, voucherStrategy, payDay, benefit, goB
+         loading,
+         setLoading,
+         repeatTransactionButton,
++        extraInfo,
+     }), [
+         voucherStrategy,
+         payDay,
+@@ -25,6 +26,7 @@ export const TicketProvider = ({ children, voucherStrategy, payDay, benefit, goB
+         hasGoToHome,
+         loading,
+         repeatTransactionButton,
++        extraInfo,
+     ]);
+     return (React.createElement(TicketContext.Provider, { value: value }, children));
+ };

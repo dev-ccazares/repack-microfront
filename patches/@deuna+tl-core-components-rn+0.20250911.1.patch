@@ -1,0 +1,192 @@
+diff --git a/node_modules/@deuna/tl-core-components-rn/src/atoms/icons/index.styles.js b/node_modules/@deuna/tl-core-components-rn/src/atoms/icons/index.styles.js
+index 40237d1..b5c7ce2 100644
+--- a/node_modules/@deuna/tl-core-components-rn/src/atoms/icons/index.styles.js
++++ b/node_modules/@deuna/tl-core-components-rn/src/atoms/icons/index.styles.js
+@@ -1,5 +1,6 @@
+ import styled from "styled-components/native";
+ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
++import { getDefaultTheme } from "../../theming/themeProvider";
+ 
+ // export const CustomIcon = styled(Icon)`
+ //   color: ${({
+@@ -11,9 +12,15 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+ // `;
+ 
+ const CustomIcon = styled(Icon)`
+-  ${({ color }) => `
+-    color: ${color ? color : neutral700};
+-  `}
++  ${({ color, theme }) => {
++    const fallbackTheme = getDefaultTheme() || {};
++    const palette = (theme && theme.colors) || fallbackTheme.colors || {};
++    const resolvedColor =
++      color || palette.neutral700 || (fallbackTheme.colors && fallbackTheme.colors.neutral700) || "#202020";
++    return `
++      color: ${resolvedColor};
++    `;
++  }}
+ `;
+ 
+ export { CustomIcon };
+diff --git a/node_modules/@deuna/tl-core-components-rn/src/atoms/typography/body/index.styles.js b/node_modules/@deuna/tl-core-components-rn/src/atoms/typography/body/index.styles.js
+index 493aeb0..0585905 100644
+--- a/node_modules/@deuna/tl-core-components-rn/src/atoms/typography/body/index.styles.js
++++ b/node_modules/@deuna/tl-core-components-rn/src/atoms/typography/body/index.styles.js
+@@ -1,20 +1,38 @@
+ import styled from "styled-components/native";
++import { getDefaultTheme } from "../../../theming/themeProvider";
+ 
+ const BodyComponent = styled.Text`
+   ${({
+     type,
+     color,
+-    theme: {
+-      colors: { neutral700 },
+-      fonts: { body },
+-    },
+-  }) => `
+-    color: ${color ? color : neutral700};
+-    font-family: ${body[type].fontFamily};
+-    font-size: ${body[type].fontSize}px;
+-    line-height: ${body[type].lineHeight}px;
+-    text-decoration-line: ${body[type].textDecoration};
+-  `}
+-`;
++     theme,
++   }) => {
++     const fallbackTheme = getDefaultTheme() || {};
++     const mergedTheme = {
++       colors: (theme && theme.colors) || fallbackTheme.colors || {},
++       fonts: (theme && theme.fonts) || fallbackTheme.fonts || {}
++     };
++
++     const bodyFonts = mergedTheme.fonts?.body || fallbackTheme.fonts?.body || {};
++     const bodyVariant = bodyFonts[type] || bodyFonts.sm || {
++       fontFamily: 'System',
++       fontSize: 14,
++       lineHeight: 20,
++       textDecoration: 'none'
++     };
++
++     const textColor = color || 
++                      mergedTheme.colors?.neutral700 || 
++                      fallbackTheme.colors?.neutral700 || 
++                      '#333333';
++     return `
++       color: ${textColor};
++       font-family: ${bodyVariant.fontFamily || 'System'};
++       font-size: ${bodyVariant.fontSize || 14}px;
++       line-height: ${bodyVariant.lineHeight || 20}px;
++       text-decoration-line: ${bodyVariant.textDecoration || 'none'};
++     `;
++   }}
++ `;
+ 
+ export { BodyComponent };
+diff --git a/node_modules/@deuna/tl-core-components-rn/src/molecules/banner/index.js b/node_modules/@deuna/tl-core-components-rn/src/molecules/banner/index.js
+index ee2a8fb..b8209b4 100644
+--- a/node_modules/@deuna/tl-core-components-rn/src/molecules/banner/index.js
++++ b/node_modules/@deuna/tl-core-components-rn/src/molecules/banner/index.js
+@@ -48,18 +48,18 @@ const iconColors = {
+ };
+ 
+ const Banner = ({
+-  type,
+-  title,
+-  description,
+-  onPress,
+-  size,
+-  disable,
+-  close,
+-  onClose,
+-  action,
+-  subButton,
+-  showIcon,
+-  image,
++  type = "default",
++  title = "Title",
++  description = "Description",
++  onPress = () => {},
++  size = "default",
++  disable = false,
++  close = false,
++  onClose = () => {},
++  action = "Cambiar",
++  subButton = "Command action",
++  showIcon = true,
++  image = "",
+ }) => {
+   const [icons, setIcons] = useState(iconsObj);
+ 
+@@ -182,19 +182,4 @@ Banner.propTypes = {
+   image: PropTypes.string,
+ };
+ 
+-Banner.defaultProps = {
+-  type: "default",
+-  title: "Title",
+-  description: "Description",
+-  onPress: () => {},
+-  size: "default",
+-  disable: false,
+-  close: false,
+-  onClose: () => {},
+-  action: "Cambiar",
+-  subButton: "Command action",
+-  showIcon: true,
+-  image: "",
+-};
+-
+ export { Banner };
+diff --git a/node_modules/@deuna/tl-core-components-rn/src/molecules/forms/formInput/index.js b/node_modules/@deuna/tl-core-components-rn/src/molecules/forms/formInput/index.js
+index eedbd1c..46aee16 100644
+--- a/node_modules/@deuna/tl-core-components-rn/src/molecules/forms/formInput/index.js
++++ b/node_modules/@deuna/tl-core-components-rn/src/molecules/forms/formInput/index.js
+@@ -53,6 +53,7 @@ const FormInput = ({
+   buttonColor,
+   buttonText,
+   buttonAction,
++  disableSpellCheck,
+   ...props
+ }) => {
+   const theme = useThemeContext();
+@@ -117,9 +118,9 @@ const FormInput = ({
+   }, [state]);
+ 
+   const truncateDecimals = (input) => {
+-    let newInput = input.replace(".", ",");
++    let newInput = input?.replace(".", ",");
+ 
+-    const parts = newInput.split(",");
++    const parts = newInput?.split(",");
+     if (parts.length >= 2) {
+       const integerPart = parts[0];
+       const decimalPart = parts[1].slice(0, 2);
+@@ -416,6 +417,7 @@ const FormInput = ({
+             renderIcon()}
+           {preAvatarProps && renderPreAvatar()}
+           <TextInput
++            spellCheck={!disableSpellCheck}
+             autoFocus={focus}
+             value={currentValue}
+             placeholder={placeholder}
+@@ -499,6 +501,7 @@ FormInput.defaultProps = {
+   buttonColor: undefined,
+   buttonText: undefined,
+   buttonAction: undefined,
++  disableSpellCheck: false,
+ };
+ 
+ export { FormInput };
+diff --git a/node_modules/@deuna/tl-core-components-rn/src/molecules/item/index.js b/node_modules/@deuna/tl-core-components-rn/src/molecules/item/index.js
+index d0ccf17..63251a4 100644
+--- a/node_modules/@deuna/tl-core-components-rn/src/molecules/item/index.js
++++ b/node_modules/@deuna/tl-core-components-rn/src/molecules/item/index.js
+@@ -464,6 +464,7 @@ const Item = ({
+               type={typeAvatar ? typeAvatar : "userInitials"}
+               size="m"
+               name={nameAvatar}
++              background={background ? background : "gradientPurple"}
+             />
+           </View>
+           <AvatarContentDefaultWithoutSubtitleValidation />
