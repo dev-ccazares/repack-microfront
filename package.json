@@ -14,6 +14,7 @@
     "@callstack/repack-plugin-reanimated": "^5.2.5",
     "@deuna/tl-core-components-rn": "^0.20250911.1",
     "@deuna/tl-core-components-v2-rn": "^0.20260325.2",
+    "@module-federation/enhanced": "2.5.0",
     "@react-native/new-app-screen": "0.80.3",
     "@react-navigation/native": "^7.2.2",
     "@react-navigation/stack": "^7.8.11",
@@ -25,9 +26,9 @@
     "react-native-device-info": "^10.14.0",
     "react-native-gesture-handler": "^2.31.2",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-reanimated": "^4.1.3",
+    "react-native-reanimated": "4.1.3",
     "react-native-safe-area-context": "^5.7.0",
-    "react-native-screens": "^4.24.0",
+    "react-native-screens": "4.24.0",
     "react-native-svg": "^15.15.4",
     "react-native-svg-transformer": "^1.5.3",
     "react-native-vector-icons": "^10.2.0",
@@ -62,6 +63,16 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "overrides": {
+    "@module-federation/webpack-bundler-runtime": "2.5.0",
+    "@module-federation/runtime": "2.5.0",
+    "@module-federation/runtime-core": "2.5.0",
+    "@module-federation/sdk": "2.5.0",
+    "@module-federation/error-codes": "2.5.0",
+    "@module-federation/runtime-tools": "2.5.0",
+    "react-native-reanimated": "4.1.3",
+    "react-native-screens": "4.24.0"
   },
   "description": "MFE RN+Repack expuesto como remote vía Module Federation 2"
 }

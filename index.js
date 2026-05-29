@@ -23,7 +23,6 @@ if (typeof globalThis.document === 'undefined') {
     removeEventListener: () => {},
     cloneNode: () => stubElement,
   };
-  // Proxy: cualquier propiedad/método no definido devuelve un no-op o null
   globalThis.document = new Proxy(
     {
       head: stubElement,
@@ -53,26 +52,49 @@ if (typeof globalThis.document === 'undefined') {
   );
 }
 
-/**
- * Bug en @deuna/tl-core-components-rn: varios styled-components usan
- * `neutral700` como identificador libre (no como `colors.neutral700` ni
- * destructurando del theme). En dev a veces se traga, pero en bundle de
- * producción crashea con ReferenceError. Lo definimos como global para
- * que el lookup encuentre el valor.
- *
- * Archivos afectados (auditados en node_modules):
- *   - tl-core-components-rn/src/atoms/icons/index.styles.js
- *   - tl-core-components-rn/src/atoms/typography/body/index.styles.js
- *   - tl-core-components-rn/src/atoms/typography/headline/index.styles.js
- *   - tl-core-components-rn/src/atoms/typography/number/index.styles.js
- */
 globalThis.neutral700 = '#202020';
 
-const { AppRegistry } = require('react-native');
+
+const { ScriptManager, Script } = require('@callstack/repack/client');
+
+ScriptManager.shared.addResolver(async (scriptId) => ({
+  url: Script.getDevServerURL(scriptId),
+  cache: false,
+}));
+
+const React = require('react');
+const { AppRegistry, View, Text, ActivityIndicator } = require('react-native');
 const { enableScreens } = require('react-native-screens');
-const App = require('./src/App').default;
 const { name: appName } = require('./app.json');
 
 enableScreens(false);
 
-AppRegistry.registerComponent(appName, () => App);
+const LazyApp = React.lazy(() => import('./src/App'));
+
+const LoadingFallback = () =>
+  React.createElement(
+    View,
+    {
+      style: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+      },
+    },
+    React.createElement(ActivityIndicator, { size: 'large', color: '#662D91' }),
+    React.createElement(
+      Text,
+      { style: { marginTop: 12, color: '#662D91' } },
+      'Cargando microfront...',
+    ),
+  );
+
+const Root = () =>
+  React.createElement(
+    React.Suspense,
+    { fallback: React.createElement(LoadingFallback) },
+    React.createElement(LazyApp),
+  );
+
+AppRegistry.registerComponent(appName, () => Root);

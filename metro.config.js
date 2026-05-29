@@ -4,8 +4,6 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const defaultConfig = getDefaultConfig(__dirname);
 const { assetExts, sourceExts } = defaultConfig.resolver;
 
-// Mocks de deps que las libs Deuna importan pero no están instaladas
-// (igual que en rspack.config.mjs)
 const MOCKS = {
   'react-native-screens': path.resolve(__dirname, 'src/mocks/react-native-screens.js'),
   'react-native-reanimated': path.resolve(__dirname, 'src/mocks/react-native-reanimated.js'),
@@ -25,11 +23,9 @@ const config = {
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
     sourceExts: [...sourceExts, 'svg', 'js', 'ts', 'jsx', 'tsx', 'json'],
     resolveRequest: (context, moduleName, platform) => {
-      // Mocks de deps faltantes
       if (MOCKS[moduleName]) {
         return { filePath: MOCKS[moduleName], type: 'sourceFile' };
       }
-      // Forzar react/react-native al root para evitar duplicados con libs Deuna
       if (
         moduleName === 'react' ||
         moduleName === 'react/jsx-runtime' ||
